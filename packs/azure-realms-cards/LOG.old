@@ -1,0 +1,5 @@
+2025/02/05-11:35:44.710 17c Log #87: 0 ops saved to Table #88 OK
+2025/02/05-11:35:44.711 17c Archiving H:\Foundry 2\Hyamda - 29998\data\Data\modules\critical-fail-shared\packs\azure-realms-cards/000087.log: OK
+2025/02/05-11:35:44.711 17c Table #23: 495 entries OK
+2025/02/05-11:35:44.800 17c Archiving H:\Foundry 2\Hyamda - 29998\data\Data\modules\critical-fail-shared\packs\azure-realms-cards/MANIFEST-000086: OK
+2025/02/05-11:35:44.808 17c **** Repaired leveldb H:\Foundry 2\Hyamda - 29998\data\Data\modules\critical-fail-shared\packs\azure-realms-cards; recovered 1 files; 74186 bytes. Some data may have been lost. ****

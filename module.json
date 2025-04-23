@@ -1,0 +1,73 @@
+{
+  "id": "pf2e-critical-fail",
+  "title": "Critical Fail PF2e",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  },
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "MTVExtreme",
+      "discord": "mtvextreme",
+      "email": "mtvextreme1998@gmail.com"
+    },
+    {
+      "name": "Midnyte64",
+      "discord": "midnyte64"
+    },
+    {
+      "name": "VampiricDarkDragon",
+      "discord": "vampiricdarkdragon"
+    },
+    {
+      "name": "PoorWarrior",
+      "discord": "poorWarrior"
+    },
+    {
+      "name": "Hyamda",
+      "discord": "hyamda"
+    },
+    {
+      "name": "Zavex Capricious",
+      "discord": "zavexcapricious"
+    }
+  ],
+  "url": "https://github.com/MTVExtreme/Critical-Fail-PF2e",
+  "manifest": "https://github.com/MTVExtreme/Critical-Fail-PF2e/releases/latest/download/module.json",
+  "download": "https://github.com/MTVExtreme/Critical-Fail-PF2e/releases/download/v0.1.0/module.zip",
+  "readme": "https://raw.githubusercontent.com/MTVExtreme/Critical-Fail-PF2e/main/README.md",
+  "changelog": "https://raw.githubusercontent.com/MTVExtreme/Critical-Fail-PF2e/main/CHANGELOG.md",
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf2e",
+        "type": "system",
+        "manifest": "https://github.com/foundryvtt/pf2e/releases/latest/download/system.json",
+        "compatibility": {
+          "minimum": "6.11.1"
+        }
+      }
+    ]
+  },
+  "packs": [
+    {
+      "name": "azure-realms-cards",
+      "label": "Azure Realms Cards",
+      "system": "pf2",
+      "path": "packs/azure-realms-cards",
+      "type": "Cards",
+      "flags": {},
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
+  "esmodules": [
+    "code/critical-fail.js"
+  ],
+  "styles": [
+    "styles/critical-fail.css"
+  ]
+}
