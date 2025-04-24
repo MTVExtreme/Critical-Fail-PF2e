@@ -10,10 +10,81 @@ function registerSettings() {
     type: Boolean,
     default: false,
   });
+
+    game.settings.register(moduleId, "enableSurges", {
+        name: "Enable Surges on Spell Cast",
+        hint: "Will automatically roll a surge each time a non-cantrip spell is cast",
+        scope: "world",
+        config: true,
+        requiresReload: false,
+        type: Boolean,
+        default: false,
+    });
 }
 
 function dev() {
   return game.modules.get(moduleId).version === "dev";
+}
+
+async function rollFlatCheck(dc, { hidden = false, label, actor }) {
+    return await game.pf2e.Check.roll(
+        new game.pf2e.StatisticModifier(label, []),
+        {
+            actor,
+            type: "flat-check",
+            dc: { value: dc, visible: true },
+            options: /* @__PURE__ */ new Set(["flat-check"]),
+            createMessage: true,
+            skipDialog: true,
+            rollMode: hidden ? "blindroll" : "roll"
+        }
+    );
+}
+
+async function checkSpellCast(message, data, userID) {
+
+    if (game.user.id !== game.users.find((u) => u.isGM && u.active).id) return;
+
+    const actor = message?.actor ?? game.actors.get(message?.speaker?.actor);
+    const token = message?.token ?? game.canvas.tokens.get(message?.speaker?.token);
+    let { item } = message;
+    const originUUID = message.flags.pf2e?.origin?.uuid;
+
+    const type =  message.flags?.pf2e?.origin?.type || message.flags?.pf2e?.context?.type;
+    const castRank = message.flags?.pf2e?.origin?.castRank;
+
+    const isBlind = message.blind;
+
+    const whisper = message.whisper || [];
+
+    const rollOptions = message.flags?.pf2e?.origin?.rollOptions || [];
+
+    const isHealingOrInnateSpell = rollOptions.includes("healing") || rollOptions.includes("spellcasting:innate");
+
+    const isCantrip = rollOptions.includes("cantrip");
+
+    if ((type === "spell-cast" || type === "spell") && !isHealingOrInnateSpell) {
+        if (!isCantrip) {
+            await rollForSurge(castRank + 1, { actor: actor, isBlind: (isBlind || whisper.length > 0) });
+        }
+        else return;
+    }
+    else return;
+}
+
+async function rollForSurge(castRank, { actor, isBlind  }) {
+    const roll = await rollFlatCheck(castRank, { hidden: isBlind, label: "Surge Check", actor: actor });
+
+    console.log("degreeOfSuccess");
+    console.log(roll.options.degreeOfSuccess);
+    console.log(roll.degreeOfSuccess);
+
+    if (roll.options.degreeOfSuccess < 2)
+        await rollFlatCheck(10, { hidden: true, label: "Surge Severity", actor: actor });
+
+    console.log("Roll");
+    console.log(roll);
+
 }
 
 async function variantFeats() {
@@ -75,6 +146,18 @@ Hooks.on("ready", () => {
 
 Hooks.once("init", () => {
   registerSettings();
+});
+
+Hooks.on("createChatMessage", async (message, data, userID) => {
+
+    const enableSurges = game.settings.get(
+        moduleId,
+        "enableSurges",
+    );
+
+    if (enableSurges) {
+        await checkSpellCast(message, data, userID);
+    }
 });
 
 Hooks.on("renderCharacterSheetPF2e", async (data, html) => {
